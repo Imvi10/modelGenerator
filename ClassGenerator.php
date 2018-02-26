@@ -238,9 +238,10 @@ and open the template in the editor.
                 var className = firtsToUpper(txtClassName);
                 var query = "function delete(){ \n ";
                 query += "try{ \n  Connection::getInstance()->beginTransaction();";
-                query += " \n $sql = 'UPDATE " + className + " SET  " + attr[0] + " = ? '; ";
+                query += " \n $sql = 'UPDATE " + className + " SET  " + attr[0] + " = 0 where " + attr[0] + " = :" + attr[0] + " '; ";
                 query += "\n $statement = Connection::getInstance()->prepare($sql); ";
-                query += "\n $statement->execute(array(':" + attr[0] + "' => $this->get" + firtsToUpper(attr[0]) + "()));";
+                query += "\n $statement->bindParam(:" + attr[0] + " , " + attr[0] + " )";
+                query += "\n $statement->execute();";
                 query += "\n Connection::getInstance()->commit(); \n ";
                 query += " return TRUE;";
                 query += " \n }catch(Exception $e){ \n $e->getMessage(); \n  Connection::getInstance()->rollback();  \n return FALSE; \n} \n }";
